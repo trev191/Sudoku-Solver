@@ -43,9 +43,7 @@ for i in range(9):
 
   label_cell_table.append(label_cell_row)
 
-label_cell_table[0][1]['text'] = "0, 1"
-label_cell_table[0][2]['text'] = "0, 2"
-label_cell_table[8][8]['text'] = "8, 8"
+hardcode_values(label_cell_table)
 
 label_title.pack()
 frame_board.pack()
@@ -53,7 +51,6 @@ frame_board.pack()
 # event handler for key press
 def handle_keypress(event):
   print(event.char)
-  label_cell_table[0][0]['text'] = event.char
 
 # bind keypress handler with key press event
 window.bind("<Key>", handle_keypress)
