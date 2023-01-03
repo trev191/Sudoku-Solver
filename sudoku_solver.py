@@ -4,7 +4,7 @@ def hardcode_values(sudoku_board):
   sudoku_board[0][2]['text'] = ""
   sudoku_board[0][3]['text'] = ""
   sudoku_board[0][4]['text'] = "7"
-  sudoku_board[0][5]['text'] = "1"
+  sudoku_board[0][5]['text'] = ""
   sudoku_board[0][6]['text'] = ""
   sudoku_board[0][7]['text'] = ""
   sudoku_board[0][8]['text'] = ""
@@ -12,7 +12,7 @@ def hardcode_values(sudoku_board):
   sudoku_board[1][0]['text'] = "6"
   sudoku_board[1][1]['text'] = ""
   sudoku_board[1][2]['text'] = ""
-  sudoku_board[1][3]['text'] = ""
+  sudoku_board[1][3]['text'] = "1"
   sudoku_board[1][4]['text'] = "9"
   sudoku_board[1][5]['text'] = "5"
   sudoku_board[1][6]['text'] = ""
@@ -98,8 +98,6 @@ def solveSudoku(sudoku_board):
         cell = sudoku_board[i][j]['text']
         for k in range(j + 1, 9):
           if ((cell != '') and (cell == sudoku_board[i][k]['text'])):
-            sudoku_board[i][k]['fg'] = "red"
-            sudoku_board[i][j]['fg'] = "red"
             return False
     return True
 
@@ -109,8 +107,6 @@ def solveSudoku(sudoku_board):
         cell = sudoku_board[j][i]['text']
         for k in range(j + 1, 9):
           if ((cell != '') and (cell == sudoku_board[k][i]['text'])):
-            sudoku_board[k][i]['fg'] = "red"
-            sudoku_board[j][i]['fg'] = "red"
             return False
     return True
 
@@ -126,13 +122,62 @@ def solveSudoku(sudoku_board):
             if ((cell != '') and (seen.get(cell)) == None):
               seen[cell] = True
             elif (cell != ''):
-              sudoku_board[i + m][j + n]['fg'] = "red"
               return False
     return True
 
   def isValid():
     return validRows() and validCols() and validSquare()
 
-  print("Solving Sudoku Board")
-  isValid()
+  def printBoard():
+    for i in range(9):
+      print("[", end='')
+      for j in range(9):
+        cell = sudoku_board[i][j]['text']
+        if cell == '': cell = '_'
+        print(f"{cell} ", end='')
+      print(']')
+    print()
 
+  # It's necessary to use a list variable 'complete' in order to have it
+  # as a global/static reference rather than just a copied value.
+  # Without it being a reference, updating the variable will not be
+  # noticed in previous recursive function calls.
+  def recursiveSudoku(i, j, complete):
+    # Check if board is complete
+    if (i == 8 and j == 8 and sudoku_board[i][j]['text'] != ''):
+      complete[0] = True
+      return
+    if complete[0]: return
+
+    # Keep range in bounds
+    elif (j == 9):
+      i += 1
+      j = 0
+
+    cell = sudoku_board[i][j]['text']
+    # print(f"[{i}][{j}] = {cell}")
+
+    # Empty cell to fill
+    if (cell == ''):
+      # Loop through values 1 - 9
+      for k in range(1, 10):
+        if complete[0]: return
+        sudoku_board[i][j]['text'] = str(k)
+        # printBoard()
+        if (isValid() == True):
+          if (i == 8 and j == 8):
+            complete[0] = True
+          recursiveSudoku(i, j + 1, complete)
+      
+      # Check if board is complete
+      if complete[0]: return
+
+      # If we reach here, we tried all inputs and need to
+      # backtrack - so erase
+      sudoku_board[i][j]['text'] = ''
+      return
+
+    else:
+      recursiveSudoku(i, j + 1, complete)
+
+  recursiveSudoku(0, 0, [False])
