@@ -57,7 +57,7 @@ window.bind("<Key>", handle_keypress)
 
 # button to solve the puzzle
 def handle_click_solve():
-  solveSudoku()
+  solveSudoku(label_cell_table)
 
 button_solve = tk.Button(
   master=window,

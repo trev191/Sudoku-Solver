@@ -89,8 +89,33 @@ def hardcode_values(sudoku_board):
   sudoku_board[8][7]['text'] = "7"
   sudoku_board[8][8]['text'] = "9"
 
+def validRows(sudoku_board):
+  for i in range(9):
+    for j in range(9):
+      cell = sudoku_board[i][j]['text']
+      for k in range(j + 1, 9):
+        if ((cell != '') and (cell == sudoku_board[i][k]['text'])):
+          return False
+  return True
+
+def validCols(sudoku_board):
+  for i in range(9):
+    for j in range(9):
+      cell = sudoku_board[j][i]['text']
+      for k in range(j + 1, 9):
+        if ((cell != '') and (cell == sudoku_board[k][i]['text'])):
+          return False
+  return True
+
+def validSquare(sudoku_board):
+  return True
+
+def isValid(sudoku_board):
+  return validRows(sudoku_board) and validCols(sudoku_board) and validSquare(sudoku_board)
+
 # master function for solving sudoku board recursively
 # with visual updates to the board
-def solveSudoku():
+def solveSudoku(sudoku_board):
   print("Solving Sudoku Board")
+  isValid(sudoku_board)
 
