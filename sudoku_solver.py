@@ -2,3 +2,4 @@
 # with visual updates to the board
 def solveSudoku():
   print("Solving Sudoku Board")
+

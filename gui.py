@@ -11,6 +11,7 @@ frame_board = tk.Frame(
   pady=10
 )
 
+# app title
 label_title = tk.Label(
   master=window,
   text="Sudoku Solver",
@@ -18,8 +19,11 @@ label_title = tk.Label(
   height=4,
 )
 
-# create sudoku grid
+# create sudoku grid and table of label references
+label_cell_table = []
 for i in range(9):
+  label_cell_row = []
+
   for j in range(9):
     frame_cell = tk.Frame(
       master=frame_board,
@@ -30,12 +34,18 @@ for i in range(9):
     frame_cell.grid(row=i, column=j)
     label_cell = tk.Label(
       master=frame_cell,
-      text=f"{i},{j}",
+      text='',
       width=4,
       height=2,
-      
     )
+    label_cell_row.append(label_cell)
     label_cell.pack()
+
+  label_cell_table.append(label_cell_row)
+
+label_cell_table[0][1]['text'] = "0, 1"
+label_cell_table[0][2]['text'] = "0, 2"
+label_cell_table[8][8]['text'] = "8, 8"
 
 label_title.pack()
 frame_board.pack()
@@ -43,6 +53,7 @@ frame_board.pack()
 # event handler for key press
 def handle_keypress(event):
   print(event.char)
+  label_cell_table[0][0]['text'] = event.char
 
 # bind keypress handler with key press event
 window.bind("<Key>", handle_keypress)
