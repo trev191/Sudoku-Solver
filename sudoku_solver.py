@@ -4,7 +4,7 @@ def hardcode_values(sudoku_board):
   sudoku_board[0][2]['text'] = ""
   sudoku_board[0][3]['text'] = ""
   sudoku_board[0][4]['text'] = "7"
-  sudoku_board[0][5]['text'] = ""
+  sudoku_board[0][5]['text'] = "1"
   sudoku_board[0][6]['text'] = ""
   sudoku_board[0][7]['text'] = ""
   sudoku_board[0][8]['text'] = ""
@@ -12,7 +12,7 @@ def hardcode_values(sudoku_board):
   sudoku_board[1][0]['text'] = "6"
   sudoku_board[1][1]['text'] = ""
   sudoku_board[1][2]['text'] = ""
-  sudoku_board[1][3]['text'] = "1"
+  sudoku_board[1][3]['text'] = ""
   sudoku_board[1][4]['text'] = "9"
   sudoku_board[1][5]['text'] = "5"
   sudoku_board[1][6]['text'] = ""
@@ -89,33 +89,50 @@ def hardcode_values(sudoku_board):
   sudoku_board[8][7]['text'] = "7"
   sudoku_board[8][8]['text'] = "9"
 
-def validRows(sudoku_board):
-  for i in range(9):
-    for j in range(9):
-      cell = sudoku_board[i][j]['text']
-      for k in range(j + 1, 9):
-        if ((cell != '') and (cell == sudoku_board[i][k]['text'])):
-          return False
-  return True
-
-def validCols(sudoku_board):
-  for i in range(9):
-    for j in range(9):
-      cell = sudoku_board[j][i]['text']
-      for k in range(j + 1, 9):
-        if ((cell != '') and (cell == sudoku_board[k][i]['text'])):
-          return False
-  return True
-
-def validSquare(sudoku_board):
-  return True
-
-def isValid(sudoku_board):
-  return validRows(sudoku_board) and validCols(sudoku_board) and validSquare(sudoku_board)
-
 # master function for solving sudoku board recursively
 # with visual updates to the board
 def solveSudoku(sudoku_board):
+  def validRows():
+    for i in range(9):
+      for j in range(9):
+        cell = sudoku_board[i][j]['text']
+        for k in range(j + 1, 9):
+          if ((cell != '') and (cell == sudoku_board[i][k]['text'])):
+            sudoku_board[i][k]['fg'] = "red"
+            sudoku_board[i][j]['fg'] = "red"
+            return False
+    return True
+
+  def validCols():
+    for i in range(9):
+      for j in range(9):
+        cell = sudoku_board[j][i]['text']
+        for k in range(j + 1, 9):
+          if ((cell != '') and (cell == sudoku_board[k][i]['text'])):
+            sudoku_board[k][i]['fg'] = "red"
+            sudoku_board[j][i]['fg'] = "red"
+            return False
+    return True
+
+  def validSquare():
+    # Grab each top left corner in of the subsquare
+    for i in range(0, 9, 3):
+      for j in range(0, 9, 3):
+        seen = {}
+        # Loop through all 9 cells in a subsquare
+        for m in range(3):
+          for n in range(3):
+            cell = sudoku_board[i + m][j + n]['text']
+            if ((cell != '') and (seen.get(cell)) == None):
+              seen[cell] = True
+            elif (cell != ''):
+              sudoku_board[i + m][j + n]['fg'] = "red"
+              return False
+    return True
+
+  def isValid():
+    return validRows() and validCols() and validSquare()
+
   print("Solving Sudoku Board")
-  isValid(sudoku_board)
+  isValid()
 

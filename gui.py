@@ -15,7 +15,7 @@ frame_board = tk.Frame(
 label_title = tk.Label(
   master=window,
   text="Sudoku Solver",
-  width=10,
+  width=12,
   height=4,
 )
 
