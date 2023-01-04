@@ -1,3 +1,5 @@
+import time
+
 def hardcode_values(sudoku_board):
   sudoku_board[0][0]['text'] = "5"
   sudoku_board[0][1]['text'] = "3"
@@ -89,9 +91,14 @@ def hardcode_values(sudoku_board):
   sudoku_board[8][7]['text'] = "7"
   sudoku_board[8][8]['text'] = "9"
 
+def clearSudoku(sudoku_board):
+  for i in range(9):
+    for j in range(9):
+      sudoku_board[i][j]['text'] = ''
+
 # master function for solving sudoku board recursively
 # with visual updates to the board
-def solveSudoku(sudoku_board):
+def solveSudoku(sudoku_board, VISUALIZATION_SPEED):
   def validRow(row):
     seen = {}
     for i in range(9):
@@ -164,7 +171,6 @@ def solveSudoku(sudoku_board):
       j = 0
 
     cell = sudoku_board[i][j]['text']
-    # print(f"[{i}][{j}] = {cell}")
 
     # Empty cell to fill
     if (cell == ''):
@@ -172,6 +178,8 @@ def solveSudoku(sudoku_board):
       for k in range(1, 10):
         if complete[0]: return
         sudoku_board[i][j]['text'] = str(k)
+        sudoku_board[i][j].update()
+        time.sleep(VISUALIZATION_SPEED)
         # printBoard()
         if (isValid(i, j) == True):
           if (i == 8 and j == 8):
@@ -184,6 +192,8 @@ def solveSudoku(sudoku_board):
       # If we reach here, we tried all inputs and need to
       # backtrack - so erase
       sudoku_board[i][j]['text'] = ''
+      sudoku_board[i][j].update()
+      time.sleep(VISUALIZATION_SPEED)
       return
 
     else:

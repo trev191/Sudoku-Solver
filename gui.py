@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 from sudoku_solver import *
 
 CELL_COLOR = "light gray"
@@ -84,16 +85,60 @@ hardcode_values(label_cell_table)
 label_title.pack()
 frame_board.pack()
 
+def handle_click_clear():
+  clearSudoku(label_cell_table)
+
 # button to solve the puzzle
 def handle_click_solve():
-  solveSudoku(label_cell_table)
+  VISUALIZATION_SPEED = float(str_selectedSpeed.get())
+  solveSudoku(label_cell_table, VISUALIZATION_SPEED)
+
+frame_button_panel = tk.Frame(
+  master=window,
+)
+
+button_clear = tk.Button(
+  master=frame_button_panel,
+  text="Clear",
+  padx=5,
+  command=handle_click_clear,
+)
+button_clear.grid(row=0, column=0)
 
 button_solve = tk.Button(
-  master=window,
+  master=frame_button_panel,
   text="Solve",
+  padx=5,
   command=handle_click_solve
 )
-button_solve.pack()
+button_solve.grid(row=0, column=1)
+
+# Desired speed of visualizing the solution/algorithm.
+# The lower the value, the faster the speed.
+frame_speed_select = tk.Frame(
+  master=window,
+  padx=5,
+)
+visualization_speeds = [
+  ("Fastest", 0),
+  ("Fast", .1),
+  ("Medium", .2),
+  ("Slow", .35),
+]
+str_selectedSpeed = tk.StringVar(value=0)
+
+for speed in visualization_speeds:
+  radio_speed_button = ttk.Radiobutton(
+    master=frame_speed_select,
+    text=speed[0],
+    value=speed[1],
+    variable=str_selectedSpeed,
+  )
+  radio_speed_button.pack()
+
+frame_speed_select.pack()
+
+frame_button_panel.pack()
 
 # listen for event loop
 # (without this line, the window will never appear)
