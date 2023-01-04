@@ -1,6 +1,9 @@
 import tkinter as tk
 from sudoku_solver import *
 
+CELL_COLOR = "light gray"
+CELL_SELECT_COLOR = "light steel blue"
+
 # create a new window
 window = tk.Tk()
 
@@ -18,6 +21,34 @@ label_title = tk.Label(
   width=12,
   height=4,
 )
+
+# event handler for key press
+def handle_keypress(event):
+  input = (event.char)
+  # clear the cell if a backspace or delete is read
+  if ((input == '\x08') or (input == '')):
+    event.widget['text'] = ''
+
+  # else verify the input is a single digit 1-9
+  elif (input.isnumeric()):
+    intNum = int(input)
+    if ((intNum > 0) and (intNum < 10)):
+      event.widget['text'] = input
+
+# event handler for clicking into a widget
+def handle_click(event):
+  event.widget.focus_set()
+
+# highlight cell we are focused on
+def handle_focus_in(event):
+  event.widget['bg'] = CELL_SELECT_COLOR
+
+# unhighlight cell after losing focus
+def handle_focus_out(event):
+  event.widget['bg'] = CELL_COLOR
+
+# clicking outside of the board will remove the focus from cells
+window.bind("<Button-1>", handle_click)
 
 # create sudoku grid and table of label references
 label_cell_table = []
@@ -37,7 +68,12 @@ for i in range(9):
       text='',
       width=4,
       height=2,
+      bg=CELL_COLOR,
     )
+    label_cell.bind("<Key>", handle_keypress)
+    label_cell.bind("<Button-1>", handle_click)
+    label_cell.bind("<FocusIn>", handle_focus_in)
+    label_cell.bind("<FocusOut>", handle_focus_out)
     label_cell_row.append(label_cell)
     label_cell.pack()
 
@@ -47,13 +83,6 @@ hardcode_values(label_cell_table)
 
 label_title.pack()
 frame_board.pack()
-
-# event handler for key press
-def handle_keypress(event):
-  print(event.char)
-
-# bind keypress handler with key press event
-window.bind("<Key>", handle_keypress)
 
 # button to solve the puzzle
 def handle_click_solve():
