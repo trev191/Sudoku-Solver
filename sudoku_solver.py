@@ -92,41 +92,50 @@ def hardcode_values(sudoku_board):
 # master function for solving sudoku board recursively
 # with visual updates to the board
 def solveSudoku(sudoku_board):
-  def validRows():
+  def validRow(row):
+    seen = {}
     for i in range(9):
-      for j in range(9):
-        cell = sudoku_board[i][j]['text']
-        for k in range(j + 1, 9):
-          if ((cell != '') and (cell == sudoku_board[i][k]['text'])):
-            return False
+      cell = sudoku_board[row][i]['text']
+      if ((cell != '') and (seen.get(cell)) == None):
+        seen[cell] = True
+      elif (cell != ''):
+        return False
     return True
 
-  def validCols():
+  def validCol(col):
+    seen = {}
     for i in range(9):
-      for j in range(9):
-        cell = sudoku_board[j][i]['text']
-        for k in range(j + 1, 9):
-          if ((cell != '') and (cell == sudoku_board[k][i]['text'])):
-            return False
+      cell = sudoku_board[i][col]['text']
+      if ((cell != '') and (seen.get(cell)) == None):
+        seen[cell] = True
+      elif (cell != ''):
+        return False
     return True
 
-  def validSquare():
+  def validSquare(row, col):
+    # Grab the top left corner of the subsquare based on arguments
+    if row >= 6: cornerRow = 6
+    elif row >= 3: cornerRow = 3
+    else: cornerRow = 0
+
+    if col >= 6: cornerCol = 6
+    elif col >= 3: cornerCol = 3
+    else: cornerCol = 0
+
     # Grab each top left corner in of the subsquare
-    for i in range(0, 9, 3):
-      for j in range(0, 9, 3):
-        seen = {}
-        # Loop through all 9 cells in a subsquare
-        for m in range(3):
-          for n in range(3):
-            cell = sudoku_board[i + m][j + n]['text']
-            if ((cell != '') and (seen.get(cell)) == None):
-              seen[cell] = True
-            elif (cell != ''):
-              return False
+    seen = {}
+    # Loop through all 9 cells in a subsquare
+    for m in range(3):
+      for n in range(3):
+        cell = sudoku_board[cornerRow + m][cornerCol + n]['text']
+        if ((cell != '') and (seen.get(cell)) == None):
+          seen[cell] = True
+        elif (cell != ''):
+          return False
     return True
 
-  def isValid():
-    return validRows() and validCols() and validSquare()
+  def isValid(row, col):
+    return validRow(row) and validCol(col) and validSquare(row, col)
 
   def printBoard():
     for i in range(9):
@@ -164,7 +173,7 @@ def solveSudoku(sudoku_board):
         if complete[0]: return
         sudoku_board[i][j]['text'] = str(k)
         # printBoard()
-        if (isValid() == True):
+        if (isValid(i, j) == True):
           if (i == 8 and j == 8):
             complete[0] = True
           recursiveSudoku(i, j + 1, complete)
@@ -180,4 +189,7 @@ def solveSudoku(sudoku_board):
     else:
       recursiveSudoku(i, j + 1, complete)
 
-  recursiveSudoku(0, 0, [False])
+  completeStatus = [False]
+  recursiveSudoku(0, 0, completeStatus)
+
+  print(completeStatus[0])
