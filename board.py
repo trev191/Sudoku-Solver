@@ -4,9 +4,7 @@
 
 import tkinter as tk
 from event_handlers import *
-
-CELL_COLOR = "light gray"
-CELL_SELECT_COLOR = "light steel blue"
+from colors import CELL_COLOR, CELL_SELECT_COLOR
 
 class Board:
   def __init__(self, masterWidget) -> None:
