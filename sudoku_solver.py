@@ -1,3 +1,6 @@
+# sudoku_solver.py
+# Contains the logic/algorithm for the program
+
 import time
 
 def hardcode_values(sudoku_board):
