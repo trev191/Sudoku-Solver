@@ -3,7 +3,6 @@
 
 import tkinter as tk
 from tkinter import ttk
-from hardcode import *
 from speedRadioBtn import *
 from sudoku import *
 from event_handlers import *
@@ -33,13 +32,14 @@ window.bind("<Button-1>", handle_click)
 sudoku_board = Board(frame_board)
 label_cell_table = sudoku_board.get_label_cell_table()
 
-hardcode_values(label_cell_table)
-
 label_title.pack()
 frame_board.pack()
 
 def handle_click_clear():
   sudoku_board.clearSudoku()
+
+def handle_click_generate():
+  sudoku_board.generateBoard()
 
 # button to solve the puzzle
 def handle_click_solve():
@@ -58,13 +58,21 @@ button_clear = tk.Button(
 )
 button_clear.grid(row=0, column=0)
 
+button_generate = tk.Button(
+  master=frame_button_panel,
+  text="Generate",
+  padx=5,
+  command=handle_click_generate
+)
+button_generate.grid(row=0, column=1)
+
 button_solve = tk.Button(
   master=frame_button_panel,
   text="Solve",
   padx=5,
   command=handle_click_solve
 )
-button_solve.grid(row=0, column=1)
+button_solve.grid(row=0, column=2)
 
 speedRadioBtn = visualizationSpeedRadioBtns(window)
 

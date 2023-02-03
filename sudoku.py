@@ -4,6 +4,7 @@
 
 import tkinter as tk
 import time
+import random
 from event_handlers import *
 from colors import CELL_COLOR, CELL_SELECT_COLOR
 
@@ -54,6 +55,89 @@ class Board:
   # master function for solving sudoku board recursively
   # with visual updates to the board
   def solveSudoku(self, VISUALIZATION_SPEED):
+    def printBoard():
+      for i in range(9):
+        print("[", end='')
+        for j in range(9):
+          cell = self.label_cell_table[i][j]['text']
+          if cell == '': cell = '_'
+          print(f"{cell} ", end='')
+        print(']')
+      print()
+
+    # It's necessary to use a list variable 'complete' in order to have it
+    # as a global/static reference rather than just a copied value.
+    # Without it being a reference, updating the variable will not be
+    # noticed in previous recursive function calls.
+    def recursiveSudoku(i, j, complete):
+      # Check if board is complete
+      if (i == 8 and j == 8 and self.label_cell_table[i][j]['text'] != ''):
+        complete[0] = True
+        return
+      if complete[0]: return
+
+      # Keep range in bounds
+      elif (j == 9):
+        i += 1
+        j = 0
+
+      cell = self.label_cell_table[i][j]['text']
+
+      # Empty cell to fill
+      if (cell == ''):
+        # Loop through values 1 - 9
+        for k in range(1, 10):
+          if complete[0]: return
+          self.label_cell_table[i][j]['text'] = str(k)
+          self.label_cell_table[i][j].update()
+          time.sleep(VISUALIZATION_SPEED)
+          # printBoard()
+          if (self.isValid(i, j) == True):
+            if (i == 8 and j == 8):
+              complete[0] = True
+            recursiveSudoku(i, j + 1, complete)
+        
+        # Check if board is complete
+        if complete[0]: return
+
+        # If we reach here, we tried all inputs and need to
+        # backtrack - so erase
+        self.label_cell_table[i][j]['text'] = ''
+        self.label_cell_table[i][j].update()
+        time.sleep(VISUALIZATION_SPEED)
+        return
+
+      else:
+        recursiveSudoku(i, j + 1, complete)
+
+    completeStatus = [False]
+    recursiveSudoku(0, 0, completeStatus)
+
+  # Helper function to check if a cell is empty
+  def cellIsEmpty(self, cellCoord):
+    if (cellCoord == None):
+      return True
+
+    row, col = cellCoord[0], cellCoord[1]
+    if (self.label_cell_table[row][col] == ''):
+      return True
+
+    else:
+      return False
+
+  # Helper function to pick a random cell in the 9x9 board
+  def randomCell(self):
+    cellCoord = None
+
+    while (self.cellIsEmpty(cellCoord)):
+      row = random.randint(0, 8)
+      cell = random.randint(0, 8)
+      cellCoord = [row, cell]
+
+    return cellCoord
+
+  # Helper function to validate a certain row and col
+  def isValid(self, row, col):
     def validRow(row):
       seen = {}
       for i in range(9):
@@ -96,65 +180,23 @@ class Board:
             return False
       return True
 
-    def isValid(row, col):
-      return validRow(row) and validCol(col) and validSquare(row, col)
+    return validRow(row) and validCol(col) and validSquare(row, col)
 
-    def printBoard():
-      for i in range(9):
-        print("[", end='')
-        for j in range(9):
-          cell = self.label_cell_table[i][j]['text']
-          if cell == '': cell = '_'
-          print(f"{cell} ", end='')
-        print(']')
-      print()
+  # Randomly generate a new unique sudoku board to be solved
+  def generateBoard(self):
+    self.clearSudoku()
+    
+    # Pick ~15 random cells to fill with random, valid numbers
+    random.seed()
+    numRandomCells = random.randint(14, 17)
+    for i in range(numRandomCells):
+      row, col = self.randomCell()
 
-    # It's necessary to use a list variable 'complete' in order to have it
-    # as a global/static reference rather than just a copied value.
-    # Without it being a reference, updating the variable will not be
-    # noticed in previous recursive function calls.
-    def recursiveSudoku(i, j, complete):
-      # Check if board is complete
-      if (i == 8 and j == 8 and self.label_cell_table[i][j]['text'] != ''):
-        complete[0] = True
-        return
-      if complete[0]: return
+      while True:
+        randNum = str(random.randint(1, 9))
+        self.label_cell_table[row][col]['text'] = str(randNum)
 
-      # Keep range in bounds
-      elif (j == 9):
-        i += 1
-        j = 0
+        if (self.isValid(row, col) == True):
+          break
 
-      cell = self.label_cell_table[i][j]['text']
-
-      # Empty cell to fill
-      if (cell == ''):
-        # Loop through values 1 - 9
-        for k in range(1, 10):
-          if complete[0]: return
-          self.label_cell_table[i][j]['text'] = str(k)
-          self.label_cell_table[i][j].update()
-          time.sleep(VISUALIZATION_SPEED)
-          # printBoard()
-          if (isValid(i, j) == True):
-            if (i == 8 and j == 8):
-              complete[0] = True
-            recursiveSudoku(i, j + 1, complete)
-        
-        # Check if board is complete
-        if complete[0]: return
-
-        # If we reach here, we tried all inputs and need to
-        # backtrack - so erase
-        self.label_cell_table[i][j]['text'] = ''
-        self.label_cell_table[i][j].update()
-        time.sleep(VISUALIZATION_SPEED)
-        return
-
-      else:
-        recursiveSudoku(i, j + 1, complete)
-
-    completeStatus = [False]
-    recursiveSudoku(0, 0, completeStatus)
-
-    print(completeStatus[0])
+        self.label_cell_table[row][col]['text'] = ''
