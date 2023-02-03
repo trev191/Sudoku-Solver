@@ -3,9 +3,9 @@
 
 import tkinter as tk
 from tkinter import ttk
-from sudoku_solver import *
+from hardcode import *
 from speedRadioBtn import *
-from board import *
+from sudoku import *
 from event_handlers import *
 
 
@@ -39,12 +39,12 @@ label_title.pack()
 frame_board.pack()
 
 def handle_click_clear():
-  clearSudoku(label_cell_table)
+  sudoku_board.clearSudoku()
 
 # button to solve the puzzle
 def handle_click_solve():
   VISUALIZATION_SPEED = speedRadioBtn.getVisualizationSpeed()
-  solveSudoku(label_cell_table, VISUALIZATION_SPEED)
+  sudoku_board.solveSudoku(VISUALIZATION_SPEED)
 
 frame_button_panel = tk.Frame(
   master=window,
@@ -69,7 +69,6 @@ button_solve.grid(row=0, column=1)
 speedRadioBtn = visualizationSpeedRadioBtns(window)
 
 frame_button_panel.pack()
-
 
 # listen for event loop
 # (without this line, the window will never appear)

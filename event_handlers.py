@@ -1,6 +1,8 @@
 # event_handlers.py
 # Contains event handler functions
 
+from colors import CELL_COLOR, CELL_SELECT_COLOR
+
 # event handler for key press
 def handle_keypress(event):
   input = (event.char)
