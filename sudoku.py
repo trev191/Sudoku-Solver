@@ -54,7 +54,7 @@ class Board:
 
   # master function for solving sudoku board recursively
   # with visual updates to the board
-  def solveSudoku(self, VISUALIZATION_SPEED):
+  def solveSudoku(self, speedRadioBtn):
     def printBoard():
       for i in range(9):
         print("[", end='')
@@ -82,6 +82,7 @@ class Board:
         j = 0
 
       cell = self.label_cell_table[i][j]['text']
+      VISUALIZATION_SPEED = speedRadioBtn.getVisualizationSpeed()
 
       # Empty cell to fill
       if (cell == ''):

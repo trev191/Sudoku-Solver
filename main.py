@@ -7,7 +7,6 @@ from speedRadioBtn import *
 from sudoku import *
 from event_handlers import *
 
-
 # create a new window
 window = tk.Tk()
 
@@ -43,8 +42,7 @@ def handle_click_generate():
 
 # button to solve the puzzle
 def handle_click_solve():
-  VISUALIZATION_SPEED = speedRadioBtn.getVisualizationSpeed()
-  sudoku_board.solveSudoku(VISUALIZATION_SPEED)
+  sudoku_board.solveSudoku(speedRadioBtn)
 
 frame_button_panel = tk.Frame(
   master=window,
