@@ -9,5 +9,5 @@ Features include:
 - Update visualization speed dynamically
 
 To run, clone the repository and run one of the following:
-- In powershell, <py .\main.py>
-- In Ubuntu/Linux/Unix, <python3 ./main.py>
+- In powershell, `py .\main.py`
+- In Ubuntu/Linux/Unix, `python3 ./main.py`
